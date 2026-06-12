@@ -68,7 +68,7 @@ export default function FinalCTASection() {
             href={CALENDLY}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-semibold text-white text-lg group"
+            className="btn-primary"
           >
             <Calendar className="w-5 h-5" />
             Book Your Strategy Call
@@ -78,7 +78,7 @@ export default function FinalCTASection() {
             href={SERVICES}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-secondary inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-semibold text-white text-lg"
+            className="btn-secondary"
           >
             Learn More
             <ExternalLink className="w-4 h-4" />

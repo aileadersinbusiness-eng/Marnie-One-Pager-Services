@@ -88,7 +88,7 @@ export default function WorkWithMeSection() {
                 href={CALENDLY}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-white"
+                className="btn-primary"
               >
                 <Calendar className="w-4 h-4" />
                 Book Your Strategy Call

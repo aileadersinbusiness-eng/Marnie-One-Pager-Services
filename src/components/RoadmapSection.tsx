@@ -1,6 +1,7 @@
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useRef } from 'react'
 import { Zap, Target, Wrench, TrendingUp } from 'lucide-react'
+import { StrategyCube } from './FloatingObject3D'
 
 const stages = [
   {
@@ -11,6 +12,7 @@ const stages = [
     color: 'from-violet-500/20 to-violet-800/5',
     borderColor: 'rgba(139,92,246,0.4)',
     glowColor: 'rgba(139,92,246,0.15)',
+    activationThreshold: 0,
     offers: [
       {
         name: 'AI Power Hour',
@@ -34,6 +36,7 @@ const stages = [
     color: 'from-fuchsia-500/20 to-fuchsia-800/5',
     borderColor: 'rgba(217,70,239,0.4)',
     glowColor: 'rgba(217,70,239,0.15)',
+    activationThreshold: 0.25,
     offers: [
       {
         name: 'AI Business Transformation Workshop',
@@ -51,6 +54,7 @@ const stages = [
     color: 'from-purple-500/20 to-purple-800/5',
     borderColor: 'rgba(168,85,247,0.4)',
     glowColor: 'rgba(168,85,247,0.15)',
+    activationThreshold: 0.5,
     offers: [
       {
         name: 'Consultancy Package',
@@ -68,6 +72,7 @@ const stages = [
     color: 'from-pink-500/20 to-pink-800/5',
     borderColor: 'rgba(236,72,153,0.4)',
     glowColor: 'rgba(236,72,153,0.15)',
+    activationThreshold: 0.75,
     offers: [
       {
         name: 'Keynotes',
@@ -85,7 +90,7 @@ const stages = [
   },
 ]
 
-function StageCard({ stage }: { stage: typeof stages[0]; index: number }) {
+function StageCard({ stage }: { stage: typeof stages[0] }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const Icon = stage.icon
@@ -93,30 +98,25 @@ function StageCard({ stage }: { stage: typeof stages[0]; index: number }) {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60, rotateX: 8 }}
+      initial={{ opacity: 0, y: 60, rotateX: 6 }}
       animate={inView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-      transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-      className="relative"
+      transition={{ duration: 0.8, ease: 'easeOut' }}
       style={{ perspective: '1000px' }}
     >
       <motion.div
-        whileHover={{ y: -4, rotateX: 2 }}
+        whileHover={{ y: -5, rotateX: 2 }}
         transition={{ duration: 0.3 }}
-        className="glass-card rounded-2xl p-7 relative overflow-hidden h-full"
+        className="glass-card glass-card-hover rounded-2xl p-7 relative overflow-hidden h-full"
         style={{
           borderColor: inView ? stage.borderColor : 'rgba(255,255,255,0.08)',
           transition: 'border-color 0.5s ease',
         }}
       >
-        {/* Background gradient */}
         <div className={`absolute inset-0 bg-gradient-to-br ${stage.color} rounded-2xl`} />
-        {/* Top glow line */}
         <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${stage.borderColor}, transparent)` }} />
-        {/* Corner glow */}
         <div className="absolute top-0 left-0 w-32 h-32 rounded-full blur-3xl" style={{ background: stage.glowColor }} />
 
         <div className="relative z-10">
-          {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
               <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: stage.borderColor.replace('0.4', '0.9') }}>
@@ -130,7 +130,6 @@ function StageCard({ stage }: { stage: typeof stages[0]; index: number }) {
             </div>
           </div>
 
-          {/* Offers */}
           <div className="space-y-4">
             {stage.offers.map((offer) => (
               <div key={offer.name} className="bg-black/20 rounded-xl p-4">
@@ -159,14 +158,31 @@ function StageCard({ stage }: { stage: typeof stages[0]; index: number }) {
 
 export default function RoadmapSection() {
   const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
   const titleRef = useRef<HTMLDivElement>(null)
   const titleInView = useInView(titleRef, { once: true, margin: '-80px' })
+
+  // Scroll-driven progress line
+  const lineScaleY = useSpring(
+    useTransform(scrollYProgress, [0.1, 0.9], [0, 1]),
+    { stiffness: 60, damping: 20 }
+  )
+  // Parallax for decorative cube
+  const cubeY = useTransform(scrollYProgress, [0, 1], [-30, 30])
 
   return (
     <section ref={sectionRef} id="roadmap" className="relative py-32 section-glow overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a0a2e] via-[#2d1057]/40 to-[#1a0a2e]" />
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[128px]" />
       <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-pink-500/8 rounded-full blur-[96px]" />
+
+      {/* Floating cube decoration */}
+      <motion.div
+        style={{ y: cubeY }}
+        className="absolute top-20 right-8 lg:right-16 hidden lg:block pointer-events-none"
+      >
+        <StrategyCube />
+      </motion.div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         {/* Title */}
@@ -202,15 +218,19 @@ export default function RoadmapSection() {
           </motion.p>
         </div>
 
-        {/* Vertical roadmap connector on desktop */}
+        {/* Grid with scroll progress line */}
         <div className="relative">
-          {/* Center line - desktop only */}
-          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 roadmap-line opacity-20" />
+          {/* Animated vertical progress line — desktop */}
+          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-white/5 overflow-hidden">
+            <motion.div
+              className="w-full origin-top roadmap-line"
+              style={{ scaleY: lineScaleY, height: '100%' }}
+            />
+          </div>
 
-          {/* Stage cards grid */}
           <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
-            {stages.map((stage, i) => (
-              <StageCard key={stage.number} stage={stage} index={i} />
+            {stages.map((stage) => (
+              <StageCard key={stage.number} stage={stage} />
             ))}
           </div>
         </div>

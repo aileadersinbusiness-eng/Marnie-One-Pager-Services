@@ -1,9 +1,10 @@
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import {
   Search, Layers, GitBranch, BookOpen, Users,
   Brain, Cpu, Key, Globe
 } from 'lucide-react'
+import { NetworkNodes } from './FloatingObject3D'
 
 const capabilities = [
   { icon: Search, label: 'AI Audits', description: 'Comprehensive review of current AI usage, gaps, and opportunities' },
@@ -18,13 +19,20 @@ const capabilities = [
 ]
 
 export default function WhatThisCoversSection() {
+  const sectionRef = useRef<HTMLElement>(null)
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
+  const nodesY = useTransform(scrollYProgress, [0, 1], [-20, 20])
 
   return (
-    <section className="relative py-32 section-glow overflow-hidden">
+    <section ref={sectionRef} className="relative py-32 section-glow overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a0a2e] via-[#1e0c38] to-[#1a0a2e]" />
       <div className="absolute top-1/2 right-0 w-80 h-80 bg-violet-600/10 rounded-full blur-[128px]" />
+      {/* Floating network nodes */}
+      <motion.div style={{ y: nodesY }} className="absolute bottom-20 left-8 hidden lg:block pointer-events-none">
+        <NetworkNodes />
+      </motion.div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         <div ref={ref} className="text-center mb-16">

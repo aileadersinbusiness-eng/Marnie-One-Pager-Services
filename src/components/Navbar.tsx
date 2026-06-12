@@ -59,7 +59,7 @@ export default function Navbar() {
             href={CALENDLY}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
+            className="btn-primary !min-h-[40px] !px-5 !text-sm"
           >
             <Calendar className="w-3.5 h-3.5" />
             Book a Call
@@ -98,7 +98,7 @@ export default function Navbar() {
             href={CALENDLY}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white w-full justify-center mt-4"
+            className="btn-primary w-full !min-h-[48px] !text-sm mt-4"
           >
             <Calendar className="w-4 h-4" />
             Book a Call
