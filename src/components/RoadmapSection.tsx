@@ -1,6 +1,7 @@
 import {
   motion, AnimatePresence,
-  useScroll, useTransform, useSpring, useMotionValueEvent,
+  useScroll, useSpring, useMotionValueEvent,
+  useTransform,
 } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { useInView } from 'framer-motion'
@@ -90,33 +91,44 @@ function StageCard({ stage, compact = false }: { stage: Stage; compact?: boolean
       }}
     >
       {/* Top shimmer */}
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${stage.accentColor}80, transparent)` }} />
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${stage.accentColor}80, transparent)` }}
+      />
       {/* Corner glow */}
-      <div className="absolute top-0 right-0 w-56 h-56 rounded-full blur-3xl pointer-events-none" style={{ background: `${stage.glowColor}0.08)` }} />
+      <div
+        className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none"
+        style={{ background: `${stage.glowColor}0.08)` }}
+      />
 
-      <div className={`relative z-10 flex flex-col h-full ${compact ? 'p-5' : 'p-8 md:p-10'}`}>
+      <div className={`relative z-10 flex flex-col h-full ${compact ? 'p-4' : 'p-6 lg:p-8'}`}>
         {/* Stage number + icon */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div
-              className="text-xs font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full"
-              style={{ background: `${stage.glowColor}0.15)`, border: `1px solid ${stage.glowColor}0.4)`, color: stage.accentColor }}
-            >
-              Stage {stage.number}
-            </div>
+        <div className="flex items-center justify-between mb-4">
+          <div
+            className="text-xs font-black uppercase tracking-[0.18em] px-3 py-1.5 rounded-full"
+            style={{
+              background: `${stage.glowColor}0.15)`,
+              border: `1px solid ${stage.glowColor}0.4)`,
+              color: stage.accentColor,
+            }}
+          >
+            Stage {stage.number}
           </div>
           <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center"
-            style={{ background: `${stage.glowColor}0.15)`, border: `1px solid ${stage.glowColor}0.4)` }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{
+              background: `${stage.glowColor}0.15)`,
+              border: `1px solid ${stage.glowColor}0.4)`,
+            }}
           >
             <Icon className="w-5 h-5" style={{ color: stage.accentColor }} />
           </div>
         </div>
 
         {/* Title */}
-        <div className="mb-2">
+        <div className="mb-3">
           <h3
-            className={`font-black tracking-tight leading-none ${compact ? 'text-4xl' : 'text-5xl md:text-6xl'}`}
+            className={`font-black tracking-tight leading-none ${compact ? 'text-3xl' : 'text-4xl lg:text-5xl'}`}
             style={{
               background: `linear-gradient(135deg, #ffffff, ${stage.accentColor})`,
               WebkitBackgroundClip: 'text',
@@ -126,39 +138,47 @@ function StageCard({ stage, compact = false }: { stage: Stage; compact?: boolean
           >
             {stage.title}
           </h3>
-          <p className="text-sm font-medium mt-1" style={{ color: stage.accentColor + 'cc' }}>
+          <p className="text-sm font-medium mt-1.5 leading-snug" style={{ color: stage.accentColor + 'cc' }}>
             {stage.subtitle}
           </p>
         </div>
 
-        {/* Description */}
+        {/* Description — only on full cards */}
         {!compact && (
-          <p className="text-gray-300 leading-relaxed text-base mb-6 max-w-lg">
+          <p className="text-gray-300 leading-relaxed text-sm mb-4">
             {stage.description}
           </p>
         )}
 
-        {/* Offers */}
+        {/* Offers — only on full cards */}
         {!compact && (
-          <div className="flex-1 space-y-2 mb-6">
+          <div className="space-y-2 mb-5">
             {stage.offers.map((offer) => (
               <div key={offer} className="flex items-start gap-3">
-                <div className="w-1 h-1 rounded-full mt-2 flex-shrink-0" style={{ background: stage.accentColor }} />
-                <span className="text-sm text-gray-300">{offer}</span>
+                <div
+                  className="w-1 h-1 rounded-full mt-[7px] flex-shrink-0"
+                  style={{ background: stage.accentColor }}
+                />
+                <span className="text-sm text-gray-300 leading-snug">{offer}</span>
               </div>
             ))}
           </div>
         )}
 
+        {/* Spacer to push badge to bottom */}
+        <div className="flex-1" />
+
         {/* Outcome badge */}
-        <div className="mt-auto">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold"
-            style={{ background: `${stage.glowColor}0.12)`, border: `1px solid ${stage.glowColor}0.35)`, color: stage.accentColor }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: stage.accentColor }} />
-            Outcome: {stage.outcome}
-          </div>
+        <div
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold self-start"
+          style={{
+            background: `${stage.glowColor}0.12)`,
+            border: `1px solid ${stage.glowColor}0.35)`,
+            color: stage.accentColor,
+          }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0" style={{ background: stage.accentColor }} />
+          Outcome: {stage.outcome}
         </div>
       </div>
     </div>
@@ -173,27 +193,28 @@ function NeuralPathway({ progress, activeIndex }: { progress: number; activeInde
   return (
     <svg viewBox="0 0 40 360" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-10 h-full">
       {/* Track */}
-      <path d="M20 20 Q20 110 20 110 Q20 120 20 120 Q20 130 20 130 Q20 220 20 220 Q20 230 20 230 Q20 240 20 240 Q20 330 20 330 Q20 340 20 340"
-        stroke="rgba(255,255,255,0.06)" strokeWidth="2" strokeLinecap="round" />
-
+      <path
+        d="M20 20 L20 340"
+        stroke="rgba(255,255,255,0.06)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       {/* Animated fill */}
       <motion.path
-        d="M20 20 Q20 110 20 110 Q20 120 20 120 Q20 130 20 130 Q20 220 20 220 Q20 230 20 230 Q20 240 20 240 Q20 330 20 330 Q20 340 20 340"
+        d="M20 20 L20 340"
         stroke="url(#pathGrad)"
         strokeWidth="2"
         strokeLinecap="round"
         strokeDasharray={totalLength}
         strokeDashoffset={totalLength - filledLength}
       />
-
       {/* Stage dots */}
       {stages.map((stage, i) => {
-        const y = 20 + i * 110
+        const y = 20 + i * 106.67
         const isActive = i === activeIndex
         const isDone = i < activeIndex
         return (
           <g key={stage.number}>
-            {/* Glow ring */}
             {isActive && (
               <motion.circle
                 cx="20" cy={y} r="14"
@@ -205,14 +226,13 @@ function NeuralPathway({ progress, activeIndex }: { progress: number; activeInde
                 transition={{ duration: 2, repeat: Infinity }}
               />
             )}
-            {/* Dot */}
             <motion.circle
-              cx="20" cy={y} r={isActive ? 8 : 5}
+              cx="20" cy={y}
               fill={isDone || isActive ? stage.accentColor : 'rgba(255,255,255,0.15)'}
               animate={{ r: isActive ? 8 : 5 }}
               transition={{ duration: 0.4 }}
+              r={isActive ? 8 : 5}
             />
-            {/* Number label */}
             <text
               x="20" y={y + 1}
               textAnchor="middle"
@@ -227,7 +247,6 @@ function NeuralPathway({ progress, activeIndex }: { progress: number; activeInde
           </g>
         )
       })}
-
       <defs>
         <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#a78bfa" />
@@ -249,8 +268,8 @@ function MobileStageCard({ stage }: { stage: Stage }) {
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: 0.05 }}
-      className="h-[460px]"
     >
+      {/* Auto height — content determines card size */}
       <StageCard stage={stage} />
     </motion.div>
   )
@@ -258,7 +277,7 @@ function MobileStageCard({ stage }: { stage: Stage }) {
 
 function MobileRoadmap() {
   return (
-    <div className="space-y-6 md:hidden">
+    <div className="space-y-5 md:hidden">
       {stages.map((stage) => (
         <MobileStageCard key={stage.number} stage={stage} />
       ))}
@@ -292,65 +311,75 @@ function DesktopJourney() {
 
   const navOpacity = useTransform(smoothProgress, [0, 0.05], [0, 1])
 
-  /* card enter/exit variants */
   const variants = {
-    enter: (d: number) => ({
-      y: d > 0 ? 60 : -60,
-      scale: 0.93,
-      opacity: 0,
-    }),
+    enter: (d: number) => ({ y: d > 0 ? 48 : -48, scale: 0.95, opacity: 0 }),
     center: { y: 0, scale: 1, opacity: 1 },
-    exit: (d: number) => ({
-      y: d > 0 ? -60 : 60,
-      scale: 0.93,
-      opacity: 0,
-    }),
+    exit: (d: number) => ({ y: d > 0 ? -48 : 48, scale: 0.95, opacity: 0 }),
   }
 
   return (
-    // Tall scroll container
     <div ref={sectionRef} style={{ height: '500vh' }} className="hidden md:block">
-      {/* Sticky inner */}
+      {/* Sticky viewport — clips to screen but doesn't hide card content */}
       <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#1a0a2e] via-[#2d1057]/60 to-[#1a0a2e]" />
-        <div className="absolute inset-0 bg-gradient-radial from-purple-700/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(109,40,217,0.1)_0%,transparent_70%)]" />
 
-        <div className="relative z-10 flex flex-col h-full max-w-7xl mx-auto px-8 lg:px-12">
-          {/* Title row */}
-          <motion.div style={{ opacity: navOpacity }} className="pt-12 pb-8 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-xs font-semibold text-purple-300 uppercase tracking-widest mb-4">
+        <div className="relative z-10 flex flex-col h-full max-w-7xl mx-auto w-full px-8 lg:px-12">
+
+          {/* ── Header ─────────────────────────────────────────── */}
+          <motion.div style={{ opacity: navOpacity }} className="pt-8 pb-5 text-center flex-shrink-0">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-xs font-semibold text-purple-300 uppercase tracking-widest mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
               The Journey
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold">
+            <h2 className="text-2xl lg:text-3xl font-bold leading-tight">
               The AI Transformation{' '}
               <span className="gradient-text">Journey</span>
             </h2>
-            <p className="text-gray-400 mt-2 text-sm">A strategic path from experimentation to embedded capability.</p>
+            <p className="text-gray-400 mt-1.5 text-sm">
+              A strategic path from experimentation to embedded capability.
+            </p>
           </motion.div>
 
-          {/* Main layout: pathway + card stack + info */}
-          <div className="flex-1 flex items-center gap-8 pb-8">
+          {/* ── Main row ────────────────────────────────────────── */}
+          {/*
+            flex-1 min-h-0 lets this row expand to fill remaining space.
+            Each column uses min-h-0 to prevent flex overflow.
+          */}
+          <div className="flex-1 min-h-0 flex items-stretch gap-6 lg:gap-8 pb-5">
+
             {/* Neural pathway */}
-            <motion.div style={{ opacity: navOpacity }} className="flex-shrink-0 h-[340px]">
-              <NeuralPathway progress={pathwayProgress} activeIndex={activeIndex} />
+            <motion.div
+              style={{ opacity: navOpacity }}
+              className="flex-shrink-0 flex items-center"
+            >
+              <div className="h-[300px] lg:h-[340px]">
+                <NeuralPathway progress={pathwayProgress} activeIndex={activeIndex} />
+              </div>
             </motion.div>
 
-            {/* Stage labels column */}
-            <motion.div style={{ opacity: navOpacity }} className="flex-shrink-0 w-28 h-[340px] flex flex-col justify-between">
+            {/* Stage navigator */}
+            <motion.div
+              style={{ opacity: navOpacity }}
+              className="flex-shrink-0 w-24 lg:w-28 flex flex-col justify-around py-2"
+            >
               {stages.map((s, i) => (
                 <button
                   key={s.number}
                   onClick={() => {
                     if (!sectionRef.current) return
-                    const rect = sectionRef.current.getBoundingClientRect()
-                    const targetY = window.scrollY + rect.top + (i / 4) * sectionRef.current.offsetHeight
+                    const el = sectionRef.current
+                    const elTop = el.getBoundingClientRect().top + window.scrollY
+                    const targetY = elTop + (i / 4) * el.offsetHeight
                     window.scrollTo({ top: targetY, behavior: 'smooth' })
                   }}
-                  className={`text-left transition-all duration-300 ${i === activeIndex ? 'opacity-100' : 'opacity-35 hover:opacity-60'}`}
+                  className={`text-left transition-all duration-300 ${i === activeIndex ? 'opacity-100' : 'opacity-30 hover:opacity-60'}`}
                 >
-                  <div className="text-xs font-black uppercase tracking-widest" style={{ color: i === activeIndex ? s.accentColor : '#6b7280' }}>
+                  <div
+                    className="text-xs font-black uppercase tracking-widest"
+                    style={{ color: i === activeIndex ? s.accentColor : '#6b7280' }}
+                  >
                     {s.number}
                   </div>
                   <div className={`text-sm font-semibold mt-0.5 ${i === activeIndex ? 'text-white' : 'text-gray-500'}`}>
@@ -360,35 +389,37 @@ function DesktopJourney() {
               ))}
             </motion.div>
 
-            {/* Card stack */}
-            <div className="flex-1 relative" style={{ height: '520px', perspective: '1200px' }}>
-              {/* Ghost: stage behind (previous) */}
-              {activeIndex > 0 && (
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    transform: 'scale(0.91) translateY(-18px)',
-                    opacity: 0.22,
-                    filter: 'blur(1.5px)',
-                    zIndex: 1,
-                  }}
-                >
-                  <StageCard stage={stages[activeIndex - 1]} compact />
-                </div>
-              )}
-
-              {/* Ghost: two stages behind */}
+            {/* ── Card stack — fills remaining horizontal space ── */}
+            <div className="flex-1 min-h-0 relative" style={{ perspective: '1200px' }}>
+              {/* Ghost: two behind */}
               {activeIndex > 1 && (
                 <div
-                  className="absolute inset-0 pointer-events-none"
+                  className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden"
                   style={{
-                    transform: 'scale(0.83) translateY(-35px)',
+                    transform: 'scale(0.84) translateY(-28px)',
                     opacity: 0.1,
                     filter: 'blur(3px)',
-                    zIndex: 0,
+                    zIndex: 1,
+                    transformOrigin: 'center center',
                   }}
                 >
                   <StageCard stage={stages[activeIndex - 2]} compact />
+                </div>
+              )}
+
+              {/* Ghost: one behind */}
+              {activeIndex > 0 && (
+                <div
+                  className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden"
+                  style={{
+                    transform: 'scale(0.92) translateY(-14px)',
+                    opacity: 0.2,
+                    filter: 'blur(1.5px)',
+                    zIndex: 2,
+                    transformOrigin: 'center center',
+                  }}
+                >
+                  <StageCard stage={stages[activeIndex - 1]} compact />
                 </div>
               )}
 
@@ -401,7 +432,7 @@ function DesktopJourney() {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                   className="absolute inset-0"
                   style={{ zIndex: 10 }}
                 >
@@ -409,15 +440,16 @@ function DesktopJourney() {
                 </motion.div>
               </AnimatePresence>
 
-              {/* Ghost: next stage (emerging hint) */}
+              {/* Ghost: next emerging */}
               {activeIndex < 3 && (
                 <div
-                  className="absolute inset-0 pointer-events-none"
+                  className="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden"
                   style={{
-                    transform: 'scale(0.89) translateY(18px)',
-                    opacity: 0.18,
+                    transform: 'scale(0.9) translateY(14px)',
+                    opacity: 0.16,
                     filter: 'blur(2px)',
                     zIndex: 1,
+                    transformOrigin: 'center center',
                   }}
                 >
                   <StageCard stage={stages[activeIndex + 1]} compact />
@@ -425,25 +457,31 @@ function DesktopJourney() {
               )}
             </div>
 
-            {/* Right: outcome + progress */}
-            <motion.div style={{ opacity: navOpacity }} className="flex-shrink-0 w-44 h-[340px] flex flex-col justify-between">
-              <div>
-                <div className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Current stage</div>
+            {/* ── Right panel ─────────────────────────────────── */}
+            <motion.div
+              style={{ opacity: navOpacity }}
+              className="flex-shrink-0 w-40 lg:w-48 min-h-0 flex flex-col justify-between py-2"
+            >
+              {/* Current stage info */}
+              <div className="min-h-0">
+                <div className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">
+                  Current stage
+                </div>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeIndex}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.35 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <div
-                      className="text-4xl font-black mb-1"
+                      className="text-3xl lg:text-4xl font-black mb-1 leading-none"
                       style={{ color: stages[activeIndex].accentColor }}
                     >
                       {stages[activeIndex].number}
                     </div>
-                    <div className="text-2xl font-bold text-white mb-3">
+                    <div className="text-xl lg:text-2xl font-bold text-white mb-2 leading-tight">
                       {stages[activeIndex].title}
                     </div>
                     <p className="text-xs text-gray-400 leading-relaxed">
@@ -454,38 +492,42 @@ function DesktopJourney() {
               </div>
 
               {/* Stage progress pills */}
-              <div className="space-y-2">
-                <div className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Progress</div>
+              <div className="space-y-2.5">
+                <div className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">
+                  Progress
+                </div>
                 {stages.map((s, i) => (
                   <div key={s.number} className="flex items-center gap-2">
                     <motion.div
                       className="h-1 rounded-full flex-1"
                       style={{
-                        background: i < activeIndex
-                          ? s.accentColor
-                          : i === activeIndex
-                            ? `linear-gradient(90deg, ${s.accentColor}, ${s.accentColor}44)`
-                            : 'rgba(255,255,255,0.08)',
+                        background:
+                          i < activeIndex
+                            ? s.accentColor
+                            : i === activeIndex
+                              ? `linear-gradient(90deg, ${s.accentColor}, ${s.accentColor}44)`
+                              : 'rgba(255,255,255,0.08)',
                       }}
                       animate={{ opacity: i <= activeIndex ? 1 : 0.3 }}
                     />
-                    <span className="text-xs text-gray-500 w-14">{s.title}</span>
+                    <span className="text-xs text-gray-500 w-14 leading-none">{s.title}</span>
                   </div>
                 ))}
               </div>
             </motion.div>
           </div>
 
-          {/* Scroll hint */}
+          {/* ── Scroll hint ─────────────────────────────────────── */}
           <motion.div
-            className="pb-6 text-center text-gray-600 text-xs uppercase tracking-widest flex items-center justify-center gap-2"
+            className="flex-shrink-0 pb-4 text-center text-gray-600 text-xs uppercase tracking-widest flex items-center justify-center gap-3"
             animate={{ opacity: [0.4, 0.8, 0.4] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <span className="w-4 h-px bg-gray-600" />
+            <span className="w-6 h-px bg-gray-700" />
             Scroll to progress through the journey
-            <span className="w-4 h-px bg-gray-600" />
+            <span className="w-6 h-px bg-gray-700" />
           </motion.div>
+
         </div>
       </div>
     </div>
@@ -503,10 +545,11 @@ export default function RoadmapSection() {
       <DesktopJourney />
 
       {/* Mobile: standard scroll */}
-      <div className="md:hidden relative py-24 section-glow overflow-hidden">
+      <div className="md:hidden relative py-20 section-glow overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1a0a2e] via-[#2d1057]/40 to-[#1a0a2e]" />
-        <div className="relative z-10 max-w-lg mx-auto px-6">
-          <div ref={titleRef} className="text-center mb-12">
+        <div className="relative z-10 max-w-lg mx-auto px-5">
+          {/* Mobile header */}
+          <div ref={titleRef} className="text-center mb-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={titleInView ? { opacity: 1, y: 0 } : {}}
@@ -519,11 +562,19 @@ export default function RoadmapSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={titleInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.1 }}
-              className="text-3xl font-bold"
+              className="text-3xl font-bold leading-tight"
             >
               Your AI Transformation{' '}
               <span className="gradient-text">Journey</span>
             </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={titleInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.2 }}
+              className="text-gray-400 text-sm mt-3 leading-relaxed"
+            >
+              A strategic path from experimentation to embedded capability.
+            </motion.p>
           </div>
           <MobileRoadmap />
         </div>
