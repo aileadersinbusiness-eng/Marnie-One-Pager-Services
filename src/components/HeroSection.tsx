@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useRef } from 'react'
 import { ArrowDown, Calendar, ExternalLink } from 'lucide-react'
 import { LogoSVGWhite } from './LogoSVG'
-import { NeuralSphere } from './FloatingObject3D'
+import HeroOrb from './HeroOrb'
 
 const CALENDLY = 'https://calendly.com/chatwithmarnie/business-with-ai-strategist'
 const SERVICES = 'https://businesswithaistrategist.com/services'
@@ -20,57 +20,6 @@ function FadeUp({ i, children, className }: { i: number; children: React.ReactNo
   )
 }
 
-function RoadmapVisual() {
-  const stages = ['Clarify', 'Align', 'Implement', 'Scale']
-  return (
-    <div className="relative w-full max-w-sm mx-auto">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
-        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-        transition={{ duration: 1.2, delay: 0.8, ease: 'easeOut' }}
-        className="relative"
-        style={{ perspective: '1000px' }}
-      >
-        <div className="absolute inset-0 bg-gradient-radial from-purple-600/30 via-transparent to-transparent rounded-full blur-3xl" />
-        <div className="glass-card rounded-2xl p-6 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 rounded-2xl" />
-          <div className="relative z-10">
-            <div className="text-xs font-semibold text-purple-300 uppercase tracking-widest mb-4 opacity-80">
-              AI Transformation Roadmap
-            </div>
-            <div className="space-y-3">
-              {stages.map((stage, i) => (
-                <motion.div
-                  key={stage}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1 + i * 0.12, duration: 0.6 }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full stage-number text-xs font-bold text-purple-300 flex-shrink-0">
-                    {String(i + 1).padStart(2, '0')}
-                  </div>
-                  <div className="flex-1 bg-white/5 rounded-lg px-3 py-2 text-sm font-medium text-white/90">
-                    {stage}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.6 }}
-              className="mt-4 pt-4 border-t border-white/5 text-xs text-gray-400"
-            >
-              From AI-curious → AI-embedded
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  )
-}
 
 export default function HeroSection() {
   const ref = useRef<HTMLElement>(null)
@@ -81,7 +30,6 @@ export default function HeroSection() {
   const visualY = useSpring(useTransform(scrollYProgress, [0, 1], [0, 60]), { stiffness: 80, damping: 20 })
   const bgOrbY = useSpring(useTransform(scrollYProgress, [0, 1], [0, 40]), { stiffness: 60, damping: 20 })
   const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0])
-  const cardRotateX = useTransform(scrollYProgress, [0, 0.5], [0, 5])
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-12">
@@ -93,15 +41,7 @@ export default function HeroSection() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-800/10 rounded-full blur-[160px]" />
       </motion.div>
 
-      {/* Neural sphere — decorative top-right */}
-      <motion.div
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, -60]), opacity }}
-        className="absolute top-24 right-8 lg:right-20 z-10 hidden lg:block pointer-events-none"
-      >
-        <NeuralSphere />
-      </motion.div>
-
-      <motion.div style={{ opacity }} className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12">
+<motion.div style={{ opacity }} className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: text content at faster parallax */}
           <motion.div style={{ y: textY }} className="text-center lg:text-left">
@@ -151,15 +91,15 @@ export default function HeroSection() {
             </FadeUp>
           </motion.div>
 
-          {/* Right: roadmap visual at slower parallax with scroll tilt */}
+          {/* Right: 3D Intelligence Orb */}
           <motion.div
-            style={{ y: visualY, rotateX: cardRotateX }}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
-            className="hidden lg:block"
+            style={{ y: visualY, height: '520px' }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
+            className="hidden lg:flex items-center justify-center"
           >
-            <RoadmapVisual />
+            <HeroOrb className="w-full h-full" />
           </motion.div>
         </div>
 
